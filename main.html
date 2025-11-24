@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Dictionnaire</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    input { padding: 5px; font-size: 16px; }
+    button { padding: 5px 10px; margin-left: 5px; }
+    .result { margin-top: 20px; }
+    .word-card {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Dictionnaire Japonais Français Anglais</h1>
+  <input id="searchInput" type="text" placeholder="Tapez un mot">
+  <button id="button">search</button>
+
+  <div id="result" class="result"></div>
+
+  <script src="words.js"></script>
+  <script>
+
+    document.getElementById("button").addEventListener("click", searchWord);
+    
+    function searchWord() {
+      const input = document.getElementById("searchInput").value.trim();
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = "";
+
+      if (input === "") {
+        resultDiv.textContent = "Mettez un mot";
+        return;
+      }
+
+      const matched = words.filter(w => w.ja.includes(input) || w.fr.includes(input.toLowerCase()) || w.en.includes(input.toLowerCase()) || w.desc.includes(input.toLowerCase()) || w.fr.includes(input.toUpperCase()) || w.en.includes(input.toUpperCase()) || w.desc.includes(input.toUpperCase()));
+
+      if (matched.length === 0) {
+        resultDiv.textContent = "Le mot que vous cherchez est introuvable.";
+        return;
+      }
+
+      matched.forEach(w => {
+        const card = document.createElement("div");
+        card.className = "word-card";
+        card.innerHTML = `
+          <p>日本語：${w.ja}　Français : ${w.fr}　English : ${w.en}</p> <br>
+          <p>${w.desc}</p>
+        `;
+        resultDiv.appendChild(card);
+      });
+    }
+  </script>
+
+</body>
+</html>
